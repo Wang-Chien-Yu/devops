@@ -1,42 +1,63 @@
 def call(Map args = [:]) {
-  if (!args.action) {
-    error "dockerUtil: action is required"
+  def action = args.action
+
+  if (!action) {
+    error "[dockerUtil] action is required (login / build / push)"
   }
 
-  switch (args.action) {
+  switch (action) {
+
     case 'login':
       dockerLogin(args)
       break
+
     case 'build':
       dockerBuild(args)
       break
+
     case 'push':
       dockerPush(args)
       break
+
     default:
-      error "dockerUtil: unsupported action ${args.action}"
+      error "[dockerUtil] Unsupported action: ${action}"
   }
 }
 
 def dockerLogin(Map args) {
+  def registry = args.registry
+  def credentialsId = args.credentialsId
+
+  if (!registry || !credentialsId) {
+    error "[dockerUtil][login] registry & credentialsId are required"
+  }
+
   withCredentials([
     usernamePassword(
-      credentialsId: args.credentialsId,
+      credentialsId: credentialsId,
       usernameVariable: 'DOCKER_USER',
       passwordVariable: 'DOCKER_PASS'
     )
   ]) {
     sh """
-      echo "\$DOCKER_PASS" | docker login ${args.registry} \
+      echo "\$DOCKER_PASS" | docker login ${registry} \
         -u "\$DOCKER_USER" --password-stdin
     """
   }
 }
 
 def dockerBuild(Map args) {
-  sh "docker build -t ${args.image} ."
+  def image = args.image
+  if (!image) {
+    error "[dockerUtil][build] image is required"
+  }
+  sh "docker build -t ${image} ."
 }
 
 def dockerPush(Map args) {
-  sh "docker push ${args.image}"
+  def image = args.image
+  if (!image) {
+    error "[dockerUtil][push] image is required"
+  }
+  sh "docker push ${image}"
 }
