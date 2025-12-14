@@ -1,5 +1,5 @@
 def dockerLogin(registry, Map args = [:]) {
-  def script = this
+    def script = this
   def credentialsId = args.credentialsId
 
   withCredentials([
@@ -17,10 +17,9 @@ def dockerLogin(registry, Map args = [:]) {
 }
 
 def dockerBuild(image) {
-  sh "docker build -t ${image} ."
+  sh "echo 111111"
 }
 
 def dockerPush(image) {
   sh "docker push ${image}"
 }
-
