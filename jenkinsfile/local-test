@@ -1,5 +1,5 @@
 def common
-def dockerUtil
+def dockerLib
 def utils
 
 pipeline {
@@ -16,9 +16,9 @@ pipeline {
     stage('Init') {
       steps {
         script {
-          common     = load "jenkins-libs/common.groovy"
-          dockerUtil = load "jenkins-libs/docker.groovy"
-          utils      = load "jenkins-libs/utils.groovy"
+          common    = load "jenkins-libs/common.groovy"
+          dockerLib = load "jenkins-libs/docker.groovy"
+          utils     = load "jenkins-libs/utils.groovy"
 
           utils.logInfo("Pipeline start")
         }
@@ -28,7 +28,7 @@ pipeline {
     stage('Docker Login') {
       steps {
         script {
-          dockerUtil.login(
+          dockerLib.login(
             env.REGISTRY,
             credentialsId: 'harbor-admin'
           )
@@ -39,7 +39,7 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          dockerUtil.build(
+          dockerLib.build(
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
         }
@@ -49,7 +49,7 @@ pipeline {
     stage('Push Image') {
       steps {
         script {
-          dockerUtil.push(
+          dockerLib.push(
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
         }
