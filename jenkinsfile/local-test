@@ -1,0 +1,74 @@
+@Library('') _   // 本地 repo，不用 shared library
+
+def common
+def dockerUtil
+def utils
+
+pipeline {
+  agent any
+
+  environment {
+    REGISTRY = "harbor.josh.com:8080"
+    PROJECT  = "demo"
+    IMAGE    = "hello-harbor"
+    TAG      = "${env.BUILD_NUMBER}"
+  }
+
+  stages {
+    stage('Init') {
+      steps {
+        script {
+          common     = load "jenkins/common.groovy"
+          dockerUtil = load "jenkins/docker.groovy"
+          utils      = load "jenkins/utils.groovy"
+
+          utils.logInfo("Pipeline start")
+        }
+      }
+    }
+
+    stage('Docker Login') {
+      steps {
+        script {
+          dockerUtil.login(
+            env.REGISTRY,
+            credentialsId: 'harbor-admin'
+          )
+        }
+      }
+    }
+
+    stage('Build Image') {
+      steps {
+        script {
+          dockerUtil.build(
+            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
+          )
+        }
+      }
+    }
+
+    stage('Push Image') {
+      steps {
+        script {
+          dockerUtil.push(
+            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
+          )
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        utils.logSuccess("Build & Push success")
+      }
+    }
+    failure {
+      script {
+        utils.logError("Pipeline failed")
+      }
+    }
+  }
+}
