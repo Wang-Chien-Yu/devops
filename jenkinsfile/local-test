@@ -20,7 +20,7 @@ pipeline {
           dockerLib = load "jenkins-libs/docker.groovy"
           utils     = load "jenkins-libs/utils.groovy"
 
-          utils.logInfo("Pipeline start")
+          utils.logInfo("dockerLib methods: ${dockerLib.metaClass.methods*.name}")
         }
       }
     }
