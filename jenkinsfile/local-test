@@ -28,8 +28,6 @@ pipeline {
     stage('Docker Login') {
       steps {
         script {
-          def dockerLib = load 'jenkins-libs/docker.groovy'
-
           dockerLib.dockerLogin(
             env.REGISTRY,
             credentialsId: 'harbor-admin'
@@ -41,8 +39,6 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          def dockerLib = load 'jenkins-libs/docker.groovy'
-
           dockerLib.build(
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
@@ -53,8 +49,6 @@ pipeline {
     stage('Push Image') {
       steps {
         script {
-          def dockerLib = load 'jenkins-libs/docker.groovy'
-          
           dockerLib.push(
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
