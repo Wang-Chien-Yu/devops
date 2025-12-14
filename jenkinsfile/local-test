@@ -1,6 +1,4 @@
-def common
-def dockerLib
-def utils
+@Library('devops') _
 
 pipeline {
   agent any
@@ -11,19 +9,6 @@ pipeline {
     IMAGE    = "hello-harbor"
     TAG      = "${env.BUILD_NUMBER}"
   }
-
-  stages {
-    stage('Init') {
-      steps {
-        script {
-          common    = load "jenkins-libs/common.groovy"
-          dockerLib = load "jenkins-libs/docker.groovy"
-          utils     = load "jenkins-libs/utils.groovy"
-
-          utils.logInfo("Successfully loaded libs")
-        }
-      }
-    }
 
     stage('Docker Login') {
       steps {
