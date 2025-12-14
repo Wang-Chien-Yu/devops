@@ -14,7 +14,7 @@ pipeline {
         container('docker') {
           dockerUtil(
             action: 'login',
-            registry: 'harbor.josh.com:8080',
+            registry: '192.168.49.2:30080',
             credentialsId: 'harbor-admin'
           )
         }
