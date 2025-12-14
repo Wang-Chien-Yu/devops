@@ -1,5 +1,7 @@
-def dockerLib
-def utils
+import groovy.transform.Field
+
+@Field def dockerLib
+@Field def utils
 
 pipeline {
   agent any
