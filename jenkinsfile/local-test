@@ -1,26 +1,16 @@
-def common
 def dockerLib
 def utils
 
 pipeline {
   agent any
 
-  environment {
-    REGISTRY = "harbor.josh.com:8080"
-    PROJECT  = "demo"
-    IMAGE    = "hello-harbor"
-    TAG      = "${env.BUILD_NUMBER}"
-  }
-
   stages {
     stage('Init') {
       steps {
         script {
-          common    = load "jenkins-libs/common.groovy"
-          dockerLib = load "jenkins-libs/docker.groovy"
-          utils     = load "jenkins-libs/utils.groovy"
-
-          utils.logInfo("Successfully loaded libs")
+          dockerLib = load 'jenkins-libs/docker.groovy'
+          utils     = load 'jenkins-libs/utils.groovy'
+          utils.logInfo("Libs loaded")
         }
       }
     }
@@ -29,43 +19,26 @@ pipeline {
       steps {
         script {
           dockerLib.dockerLogin(
-            env.REGISTRY,
+            'harbor.josh.com:8080',
             credentialsId: 'harbor-admin'
           )
         }
       }
     }
 
-    stage('Build Image') {
+    stage('Build') {
       steps {
         script {
-          dockerLib.dockerBuild(
-            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
-          )
+          dockerLib.build('demo/test:1.0')
         }
       }
     }
 
-    stage('Push Image') {
+    stage('Push') {
       steps {
         script {
-          dockerLib.dockerPush(
-            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
-          )
+          dockerLib.push('demo/test:1.0')
         }
-      }
-    }
-  }
-
-  post {
-    success {
-      script {
-        utils.logSuccess("Build & Push success")
-      }
-    }
-    failure {
-      script {
-        utils.logError("Pipeline failed")
       }
     }
   }
