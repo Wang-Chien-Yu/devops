@@ -29,6 +29,7 @@ pipeline {
       steps {
         script {
           dockerLib.dockerLogin(
+            this,
             env.REGISTRY,
             credentialsId: 'harbor-admin'
           )
@@ -40,6 +41,7 @@ pipeline {
       steps {
         script {
           dockerLib.dockerBuild(
+            this,
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
         }
@@ -50,6 +52,7 @@ pipeline {
       steps {
         script {
           dockerLib.dockerPush(
+            this,
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
         }
