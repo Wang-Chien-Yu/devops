@@ -1,7 +1,12 @@
 @Library('devops') _
 
 pipeline {
-  agent any
+  agent {
+    kubernetes {
+      yamlFile 'docker-builder.yaml'
+      defaultContainer 'docker'
+    }
+  }
 
   stages {
     stage('Docker Login') {
