@@ -28,7 +28,7 @@ pipeline {
     stage('Docker Login') {
       steps {
         script {
-          dockerLib.login(
+          dockerLib.dockerLogin(
             env.REGISTRY,
             credentialsId: 'harbor-admin'
           )

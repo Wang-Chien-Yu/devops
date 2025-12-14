@@ -1,4 +1,4 @@
-def login(registry, Map args = [:]) {
+def dockerLogin(registry, Map args = [:]) {
   def credentialsId = args.credentialsId
 
   withCredentials([
