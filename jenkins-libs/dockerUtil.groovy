@@ -1,26 +1,24 @@
 def call(Map args = [:]) {
-  def action = args.action
-
-  if (!action) {
+  if (!args.action) {
     error "dockerUtil: action is required"
   }
 
-  switch (action) {
+  switch (args.action) {
     case 'login':
-      login(args)
+      dockerLogin(args)
       break
     case 'build':
-      buildImage(args)
+      dockerBuild(args)
       break
     case 'push':
-      pushImage(args)
+      dockerPush(args)
       break
     default:
-      error "dockerUtil: unsupported action ${action}"
+      error "dockerUtil: unsupported action ${args.action}"
   }
 }
 
-private def login(Map args) {
+def dockerLogin(Map args) {
   withCredentials([
     usernamePassword(
       credentialsId: args.credentialsId,
@@ -35,10 +33,10 @@ private def login(Map args) {
   }
 }
 
-private def buildImage(Map args) {
+def dockerBuild(Map args) {
   sh "docker build -t ${args.image} ."
 }
 
-private def pushImage(Map args) {
+def dockerPush(Map args) {
   sh "docker push ${args.image}"
 }
