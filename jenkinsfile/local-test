@@ -14,7 +14,7 @@ pipeline {
         container('docker') {
           dockerUtil(
             action: 'login',
-            registry: '192.168.49.2:30080',
+            registry: 'harbor.josh.com',
             credentialsId: 'harbor-admin'
           )
         }
@@ -26,7 +26,7 @@ pipeline {
         container('docker') {
           dockerUtil(
             action: 'build',
-            image: 'harbor.josh.com:8080/demo/hello:latest'
+            image: 'harbor.josh.com/demo/hello:latest'
           )
         }
       }
@@ -37,7 +37,7 @@ pipeline {
         container('docker') {
           dockerUtil(
             action: 'push',
-            image: 'harbor.josh.com:8080/demo/hello:latest'
+            image: 'harbor.josh.com/demo/hello:latest'
           )
         }
       }
