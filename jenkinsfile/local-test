@@ -10,6 +10,7 @@ pipeline {
     TAG      = "${env.BUILD_NUMBER}"
   }
 
+  stages {
     stage('Docker Login') {
       steps {
         script {
