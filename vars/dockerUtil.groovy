@@ -4,7 +4,7 @@ def call(Map args = [:]) {
   def action = args.action
 
   if (!action) {
-    error "[dockerUtil] action is required (login | build | push)"
+    error "[dockerUtil] action is required (login | pull)"
   }
 
   switch (action) {
@@ -12,12 +12,8 @@ def call(Map args = [:]) {
       dockerLogin(args)
       break
 
-    case 'build':
-      dockerBuild(args)
-      break
-
-    case 'push':
-      dockerPush(args)
+    case 'pull':
+      dockerPull(args)
       break
 
     default:
@@ -52,33 +48,17 @@ def dockerLogin(Map args) {
 }
 
 /* =========================
- * docker build
+ * docker pull
  * ========================= */
-def dockerBuild(Map args) {
+def dockerPull(Map args) {
   def image = args.image
 
   if (!image) {
-    error "[dockerUtil][build] image is required"
+    error "[dockerUtil][pull] image is required"
   }
 
   sh """
     set -e
-    docker build -t ${image} .
-  """
-}
-
-/* =========================
- * docker push
- * ========================= */
-def dockerPush(Map args) {
-  def image = args.image
-
-  if (!image) {
-    error "[dockerUtil][push] image is required"
-  }
-
-  sh """
-    set -e
-    docker push ${image}
+    docker pull ${image}
   """
 }

@@ -21,23 +21,12 @@ pipeline {
       }
     }
 
-    stage('Build Image') {
+    stage('Docker Pull (Verify)') {
       steps {
         container('docker') {
           dockerUtil(
-            action: 'build',
-            image: 'harbor.josh.com/demo/hello:latest'
-          )
-        }
-      }
-    }
-
-    stage('Push Image') {
-      steps {
-        container('docker') {
-          dockerUtil(
-            action: 'push',
-            image: 'harbor.josh.com/demo/hello:latest'
+            action: 'pull',
+            image: 'harbor.josh.com/library/nginx:latest'
           )
         }
       }
