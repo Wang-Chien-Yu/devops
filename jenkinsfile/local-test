@@ -3,55 +3,32 @@
 pipeline {
   agent any
 
-  environment {
-    REGISTRY = "harbor.josh.com:8080"
-    PROJECT  = "demo"
-    IMAGE    = "hello-harbor"
-    TAG      = "${env.BUILD_NUMBER}"
-  }
-
   stages {
     stage('Docker Login') {
       steps {
-        script {
-          dockerLib.dockerLogin(
-            env.REGISTRY,
-            credentialsId: 'harbor-admin'
-          )
-        }
+        docker(
+          action: 'login',
+          registry: 'harbor.josh.com:8080',
+          credentialsId: 'harbor-admin'
+        )
       }
     }
 
     stage('Build Image') {
       steps {
-        script {
-          dockerLib.build(
-            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
-          )
-        }
+        docker(
+          action: 'build',
+          image: 'harbor.josh.com:8080/demo/hello:latest'
+        )
       }
     }
 
     stage('Push Image') {
       steps {
-        script {
-          dockerLib.push(
-            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
-          )
-        }
-      }
-    }
-  }
-
-  post {
-    success {
-      script {
-        utils.logSuccess("Build & Push success")
-      }
-    }
-    failure {
-      script {
-        utils.logError("Pipeline failed")
+        docker(
+          action: 'push',
+          image: 'harbor.josh.com:8080/demo/hello:latest'
+        )
       }
     }
   }
