@@ -1,18 +1,26 @@
-import groovy.transform.Field
-
-@Field def dockerLib
-@Field def utils
+def common
+def dockerLib
+def utils
 
 pipeline {
   agent any
+
+  environment {
+    REGISTRY = "harbor.josh.com:8080"
+    PROJECT  = "demo"
+    IMAGE    = "hello-harbor"
+    TAG      = "${env.BUILD_NUMBER}"
+  }
 
   stages {
     stage('Init') {
       steps {
         script {
-          dockerLib = load 'jenkins-libs/docker.groovy'
-          utils     = load 'jenkins-libs/utils.groovy'
-          utils.logInfo("Libs loaded")
+          common    = load "jenkins-libs/common.groovy"
+          dockerLib = load "jenkins-libs/docker.groovy"
+          utils     = load "jenkins-libs/utils.groovy"
+
+          utils.logInfo("Successfully loaded libs")
         }
       }
     }
@@ -20,27 +28,50 @@ pipeline {
     stage('Docker Login') {
       steps {
         script {
+          def dockerLib = load 'jenkins-libs/docker.groovy'
+
           dockerLib.dockerLogin(
-            'harbor.josh.com:8080',
+            env.REGISTRY,
             credentialsId: 'harbor-admin'
           )
         }
       }
     }
 
-    stage('Build') {
+    stage('Build Image') {
       steps {
         script {
-          dockerLib.build('demo/test:1.0')
+          def dockerLib = load 'jenkins-libs/docker.groovy'
+
+          dockerLib.build(
+            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
+          )
         }
       }
     }
 
-    stage('Push') {
+    stage('Push Image') {
       steps {
         script {
-          dockerLib.push('demo/test:1.0')
+          def dockerLib = load 'jenkins-libs/docker.groovy'
+          
+          dockerLib.push(
+            "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
+          )
         }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        utils.logSuccess("Build & Push success")
+      }
+    }
+    failure {
+      script {
+        utils.logError("Pipeline failed")
       }
     }
   }
