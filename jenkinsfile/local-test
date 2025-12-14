@@ -1,5 +1,3 @@
-@Library('') _   // 本地 repo，不用 shared library
-
 def common
 def dockerUtil
 def utils
@@ -18,9 +16,9 @@ pipeline {
     stage('Init') {
       steps {
         script {
-          common     = load "jenkins/common.groovy"
-          dockerUtil = load "jenkins/docker.groovy"
-          utils      = load "jenkins/utils.groovy"
+          common     = load "jenkins-libs/common.groovy"
+          dockerUtil = load "jenkins-libs/docker.groovy"
+          utils      = load "jenkins-libs/utils.groovy"
 
           utils.logInfo("Pipeline start")
         }
