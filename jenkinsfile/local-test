@@ -30,8 +30,7 @@ pipeline {
         script {
           dockerLib.dockerLogin(
             this,
-            env.REGISTRY,
-            credentialsId: 'harbor-admin'
+            env.REGISTRY
           )
         }
       }
