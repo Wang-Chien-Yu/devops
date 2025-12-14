@@ -1,0 +1,41 @@
+@Library('devops') _
+
+pipeline {
+  agent any
+
+  environment {
+    PRODUCT     = "loacl"
+    TG_GROUP_ID = "-1003393819995"
+    TG_BOT_ID   = credentials('telegram-bot-token')
+    BUILD_FUNC  = "frontend"
+  }
+
+  stages {
+    stage('Start') {
+      steps {
+        script {
+          notify('START')
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        echo "Do something..."
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        notify('SUCCESS')
+      }
+    }
+    failure {
+      script {
+        notify('FAILURE')
+      }
+    }
+  }
+}

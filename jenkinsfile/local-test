@@ -8,13 +8,6 @@ pipeline {
     }
   }
 
-  environment {
-    PRODUCT     = "loacl"
-    TG_GROUP_ID = "-1003393819995"
-    TG_BOT_ID   = credentials('telegram-bot-token')
-    BUILD_FUNC  = "frontend"
-  }
-
   stages {
     stage('Docker Login') {
       steps {
