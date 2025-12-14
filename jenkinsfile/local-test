@@ -3,8 +3,8 @@
 pipeline {
   agent {
     kubernetes {
-      yamlFile 'docker-builder.yaml'
-      defaultContainer 'docker'
+      cloud 'ops_ack'
+      inheritFrom 'docker-build'
     }
   }
 
