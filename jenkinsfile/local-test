@@ -19,6 +19,8 @@ pipeline {
           common    = load "jenkins-libs/common.groovy"
           dockerLib = load "jenkins-libs/docker.groovy"
           utils     = load "jenkins-libs/utils.groovy"
+
+          utils.logInfo("Successfully loaded libraries.")
         }
       }
     }
