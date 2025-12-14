@@ -20,7 +20,7 @@ pipeline {
           dockerLib = load "jenkins-libs/docker.groovy"
           utils     = load "jenkins-libs/utils.groovy"
 
-          utils.logInfo("Successfully loaded libraries.")
+          utils.logInfo("Successfully loaded libs")
         }
       }
     }
@@ -39,7 +39,7 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          dockerLib.build(
+          dockerLib.dockerBuild(
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
         }
@@ -49,7 +49,7 @@ pipeline {
     stage('Push Image') {
       steps {
         script {
-          dockerLib.push(
+          dockerLib.dockerPush(
             "${env.REGISTRY}/${env.PROJECT}/${env.IMAGE}:${env.TAG}"
           )
         }

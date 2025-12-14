@@ -17,9 +17,11 @@ def dockerLogin(registry, Map args = [:]) {
 }
 
 def dockerBuild(image) {
-  sh "echo 111111"
+  sh "docker build -t ${image} ."
 }
 
 def dockerPush(image) {
   sh "docker push ${image}"
 }
+
+return this
