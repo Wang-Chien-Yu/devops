@@ -15,11 +15,11 @@ def dockerLogin(registry, Map args = [:]) {
   }
 }
 
-def build(image) {
+def dockerBuild(image) {
   sh "docker build -t ${image} ."
 }
 
-def push(image) {
+def dockerPush(image) {
   sh "docker push ${image}"
 }
 
