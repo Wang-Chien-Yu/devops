@@ -11,29 +11,35 @@ pipeline {
   stages {
     stage('Docker Login') {
       steps {
-        dockerUtil(
-          action: 'login',
-          registry: 'harbor.josh.com:8080',
-          credentialsId: 'harbor-admin'
-        )
+        container('docker') {
+          dockerUtil(
+            action: 'login',
+            registry: 'harbor.josh.com:8080',
+            credentialsId: 'harbor-admin'
+          )
+        }
       }
     }
 
     stage('Build Image') {
       steps {
-        dockerUtil(
-          action: 'build',
-          image: 'harbor.josh.com:8080/demo/hello:latest'
-        )
+        container('docker') {
+          dockerUtil(
+            action: 'build',
+            image: 'harbor.josh.com:8080/demo/hello:latest'
+          )
+        }
       }
     }
 
     stage('Push Image') {
       steps {
-        dockerUtil(
-          action: 'push',
-          image: 'harbor.josh.com:8080/demo/hello:latest'
-        )
+        container('docker') {
+          dockerUtil(
+            action: 'push',
+            image: 'harbor.josh.com:8080/demo/hello:latest'
+          )
+        }
       }
     }
   }
