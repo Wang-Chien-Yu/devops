@@ -1,5 +1,5 @@
 def dockerLogin(registry) {
-
+    echo "ℹ️  testtttttt"
 //   def credentialsId = args.credentialsId
 
 //   withCredentials([
@@ -9,12 +9,12 @@ def dockerLogin(registry) {
 //       passwordVariable: 'DOCKER_PASS'
 //     )
 //   ]) 
-  {
-    sh """
-      echo "\$DOCKER_PASS" | docker login ${registry} \
-        -u "\$DOCKER_USER" --password-stdin
-    """
-  }
+//   {
+//     sh """
+//       echo "\$DOCKER_PASS" | docker login ${registry} \
+//         -u "\$DOCKER_USER" --password-stdin
+//     """
+//   }
 }
 
 def dockerBuild(image) {
